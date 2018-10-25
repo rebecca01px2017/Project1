@@ -2,6 +2,8 @@ import os
 import filecmp
 from dateutil.relativedelta import *
 from datetime import date
+import datetime
+
 
 def getData(file):
 	inFile = open(file, "r")
@@ -30,7 +32,7 @@ def getData(file):
 def mySort(data,col):
 	d={}
 	sort=[]
-	for x in data[1:]:
+	for x in data:
 		for y in x:
 			if x[y] == col:
 				keyw=y
@@ -93,30 +95,60 @@ def findMonth(a):
 	pass
 
 def mySortPrint(a,col,fileName):
+	file=open(fileName,'w')
+
 	lst=[]
-	for x in lines:
-		a=x.split(",")
-		d={}
-		first=a[0]
-		last=a[1]
-		email=a[2]
-		clas=a[3]
-		DOB=a[4]
-		d={"first":first,"last":last,"email":email,"class":clas,"DOB":DOB}
-		lst.append(d)#Similar to mySort, but instead of returning single
-#Student, the sorted data is saved to a csv file.
-# as fist,last,email
-#Input: list of dictionaries, col (key) to sort by and output file name
-#Output: No return value, but the file is written
+
+	for x in a:
+		for y in x:
+			if x[y] == col:
+				keyw=y
+
+
+	test=sorted(a[1:], key=lambda k: k[keyw])
+
+
+	for x in test:
+		first=x['first']
+		last=x['last']
+		email=x['email']
+
+		file.writelines([first,",",last,",",email, '\n'])
+
+
+	return None
 
 	pass
 
 def findAge(a):
-# def findAge(a):
-# Input: list of dictionaries
-# Output: Return the average age of the students and round that age to the nearest
-# integer.  You will need to work with the DOB and the current date to find the current
-# age in years.
+	now = datetime.datetime.now()
+	current=now.year
+	length=0
+	years_lst=[]
+	difference=[]
+
+	for x in a[1:]:
+		birth=x['DOB']
+		year=birth.split('/')
+		years=year[2]
+		stripped=years.strip('\n')
+		years_lst.append(stripped)
+
+	for x in years_lst:
+
+		difference.append(current-int(x))
+
+	sums=0
+
+	for x in difference:
+		sums=sums+x
+		length=length+1
+
+	avg=sums/length
+
+
+
+	return round(avg)
 
 	pass
 
